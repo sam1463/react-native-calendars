@@ -394,6 +394,9 @@ export default class AgendaView extends Component {
               onLayout={() => {
                 this.calendar.scrollToDay(this.state.selectedDay.clone(), this.calendarOffset(), false);
               }}
+              // pass the currentDay through when the calendar is not scrollable (i.e. in week mode, not month)
+              // this enables us to turn off accessibility for weeks based on whether they're the current week
+              currentDay={!this.state.calendarScrollable && this.state.selectedDay}
               calendarWidth={this.viewWidth}
               theme={this.props.theme}
               onVisibleMonthsChange={this.onVisibleMonthsChange.bind(this)}

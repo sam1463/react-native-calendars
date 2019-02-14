@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import Calendar from '../calendar';
 import styleConstructor from './style';
+import dateutils from '../dateutils';
 
 class CalendarListItem extends Component {
   static defaultProps = {
@@ -23,8 +24,21 @@ class CalendarListItem extends Component {
   render() {
     const row = this.props.item;
     if (row.getTime) {
+      // pass through whether each month should show accessibility, and pass the current day prop only
+      // to the current month, that way we avoid needlessly re-rendering other months when scrolling
+      const { currentDay } = this.props;
+      const hideAccessibility = currentDay && !dateutils.sameMonth(row, currentDay);
+
+      const extraProps = hideAccessibility ? {
+        hideAccessibility,
+      } : {
+        hideAccessibility,
+        currentDay,
+      };
+
       return (
         <Calendar
+          {...extraProps}
           theme={this.props.theme}
           style={[{height: this.props.calendarHeight, width: this.props.calendarWidth}, this.style.calendar]}
           current={row}

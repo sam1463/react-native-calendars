@@ -224,8 +224,13 @@ class Calendar extends Component {
     return <Day key={`week-${weekNumber}`} theme={this.props.theme} marking={{disableTouchEvent: true}} state='disabled'>{weekNumber}</Day>;
   }
 
-  renderWeek(days, id) {
+  renderWeek(days, id, hideAccessibility) {
     const week = [];
+    const { currentDay } = this.props;
+    // if a currentDay is passed in, hide the week unless the current day is in the list of days
+    // (but skip the check if we already know to hide accessibility)
+    let showWeek = !hideAccessibility && currentDay && dateutils.isGTE(currentDay, days[0]) && dateutils.isLTE(currentDay, days[days.length - 1]);
+
     days.forEach((day, id2) => {
       week.push(this.renderDay(day, id2));
     }, this);
@@ -234,14 +239,15 @@ class Calendar extends Component {
       week.unshift(this.renderWeekNumber(days[days.length - 1].getWeek()));
     }
 
-    return (<View style={this.style.week} key={id}>{week}</View>);
+    // depending on the value of `hideWeek`, show/hide for accessibility
+    return (<View style={this.style.week} importantForAccessibility={showWeek ? 'yes' : 'no'} accessibilityElementsHidden={!showWeek} key={id}>{week}</View>);
   }
 
   render() {
     const days = dateutils.page(this.state.currentMonth, this.props.firstDay);
     const weeks = [];
     while (days.length) {
-      weeks.push(this.renderWeek(days.splice(0, 7), weeks.length));
+      weeks.push(this.renderWeek(days.splice(0, 7), weeks.length, this.props.hideAccessibility));
     }
     let indicator;
     const current = parseDate(this.props.current);
