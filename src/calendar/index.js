@@ -229,7 +229,11 @@ class Calendar extends Component {
     const { currentDay } = this.props;
     // if a currentDay is passed in, hide the week unless the current day is in the list of days
     // (but skip the check if we already know to hide accessibility)
-    let showWeek = !hideAccessibility && currentDay && dateutils.isGTE(currentDay, days[0]) && dateutils.isLTE(currentDay, days[days.length - 1]);
+    const showWeek = !currentDay || (
+      !hideAccessibility
+      && dateutils.isGTE(currentDay, days[0])
+      && dateutils.isLTE(currentDay, days[days.length - 1])
+    );
 
     days.forEach((day, id2) => {
       week.push(this.renderDay(day, id2));
