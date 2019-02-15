@@ -224,12 +224,25 @@ class Calendar extends Component {
     return <Day key={`week-${weekNumber}`} theme={this.props.theme} marking={{disableTouchEvent: true}} state='disabled'>{weekNumber}</Day>;
   }
 
-  renderWeek(days, id, hideAccessibility) {
+  renderWeek(days, id) {
     const week = [];
-    const { currentDay } = this.props;
-    // if a currentDay is passed in, hide the week unless the current day is in the list of days
-    // (but skip the check if we already know to hide accessibility)
-    let showWeek = !hideAccessibility && currentDay && dateutils.isGTE(currentDay, days[0]) && dateutils.isLTE(currentDay, days[days.length - 1]);
+    const {
+      currentDay,
+      hideAccessibility,
+    } = this.props;
+
+    // show the week for accessibility if we're showing the whole calendar,
+    // or if we're in week view, and this is the correct week
+    // for performance, we have hideAccessibility passed in if it's the wrong month in week view.
+    // this means if hideAccessibility is false, we should hide the current month,
+    // but if it's true, we check if currentDay exists. If not, we're in month view, so show week,
+    // if so, check if it's the right week
+    const showWeek = !hideAccessibility && (
+      !currentDay || (
+        dateutils.isGTE(currentDay, days[0])
+        && dateutils.isLTE(currentDay, days[days.length - 1])
+      )
+    );
 
     days.forEach((day, id2) => {
       week.push(this.renderDay(day, id2));
@@ -247,7 +260,7 @@ class Calendar extends Component {
     const days = dateutils.page(this.state.currentMonth, this.props.firstDay);
     const weeks = [];
     while (days.length) {
-      weeks.push(this.renderWeek(days.splice(0, 7), weeks.length, this.props.hideAccessibility));
+      weeks.push(this.renderWeek(days.splice(0, 7), weeks.length));
     }
     let indicator;
     const current = parseDate(this.props.current);
@@ -258,8 +271,16 @@ class Calendar extends Component {
         indicator = true;
       }
     }
+
+    // if we're hiding from accessibility for the full month, hide the month label too
+    const { hideAccessibility } = this.props;
+    const viewAccessibilityProps = {
+      importantForAccessibility: hideAccessibility ? 'no' : 'yes',
+      accessibilityElementsHidden: hideAccessibility,
+    };
+
     return (
-      <View style={[this.style.container, this.props.style]}>
+      <View {...viewAccessibilityProps} style={[this.style.container, this.props.style]}>
         <CalendarHeader
           theme={this.props.theme}
           hideArrows={this.props.hideArrows}
