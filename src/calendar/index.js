@@ -253,7 +253,7 @@ class Calendar extends Component {
     }
 
     // depending on the value of `hideWeek`, show/hide for accessibility
-    return (<View style={this.style.week} importantForAccessibility={showWeek ? 'yes' : 'no'} accessibilityElementsHidden={!showWeek} key={id}>{week}</View>);
+    return (<View style={this.style.week} importantForAccessibility={showWeek ? 'yes' : 'no-hide-descendants'} accessibilityElementsHidden={!showWeek} key={id}>{week}</View>);
   }
 
   render() {
@@ -275,7 +275,7 @@ class Calendar extends Component {
     // if we're hiding from accessibility for the full month, hide the month label too
     const { hideAccessibility } = this.props;
     const viewAccessibilityProps = {
-      importantForAccessibility: hideAccessibility ? 'no' : 'yes',
+      importantForAccessibility: hideAccessibility ? 'no-hide-descendants' : 'yes',
       accessibilityElementsHidden: hideAccessibility,
     };
 
