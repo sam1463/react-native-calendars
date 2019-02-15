@@ -116,8 +116,6 @@ class ReactComp extends Component {
       accessibilityElementsHidden: hideAccessibility,
     };
 
-    console.log('rendering row', item, viewAccessibilityProps);
-
     return (
       <View
         onLayout={this.onRowLayoutChange.bind(this, index)}
