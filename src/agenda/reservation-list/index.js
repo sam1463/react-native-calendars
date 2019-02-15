@@ -112,7 +112,7 @@ class ReactComp extends Component {
   renderRow({item, index}) {
     const { hideAccessibility } = this.props;
     const viewAccessibilityProps = {
-      importantForAccessibility: hideAccessibility ? 'no' : 'yes',
+      importantForAccessibility: hideAccessibility ? 'no-hide-descendants' : 'yes',
       accessibilityElementsHidden: hideAccessibility,
     };
 
