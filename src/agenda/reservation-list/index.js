@@ -110,8 +110,19 @@ class ReactComp extends Component {
   }
 
   renderRow({item, index}) {
+    const { hideAccessibility } = this.props;
+    const viewAccessibilityProps = {
+      importantForAccessibility: hideAccessibility ? 'no' : 'yes',
+      accessibilityElementsHidden: hideAccessibility,
+    };
+
+    console.log('rendering row', item, viewAccessibilityProps);
+
     return (
-      <View onLayout={this.onRowLayoutChange.bind(this, index)}>
+      <View
+        onLayout={this.onRowLayoutChange.bind(this, index)}
+        {...viewAccessibilityProps}
+      >
         <Reservation
           item={item}
           renderItem={this.props.renderItem}
