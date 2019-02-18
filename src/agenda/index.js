@@ -275,6 +275,8 @@ export default class AgendaView extends Component {
   renderReservations() {
     return (
       <ReservationsList
+        // only show accessibility when agenda is visible (so it's not found by screen readers when hidden)
+        hideAccessibility={this.state.calendarScrollable}
         refreshControl={this.props.refreshControl}
         refreshing={this.props.refreshing}
         onRefresh={this.props.onRefresh}
