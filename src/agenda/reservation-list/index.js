@@ -110,17 +110,8 @@ class ReactComp extends Component {
   }
 
   renderRow({item, index}) {
-    const { hideAccessibility } = this.props;
-    const viewAccessibilityProps = {
-      importantForAccessibility: hideAccessibility ? 'no-hide-descendants' : 'yes',
-      accessibilityElementsHidden: hideAccessibility,
-    };
-
     return (
-      <View
-        onLayout={this.onRowLayoutChange.bind(this, index)}
-        {...viewAccessibilityProps}
-      >
+      <View onLayout={this.onRowLayoutChange.bind(this, index)}>
         <Reservation
           item={item}
           renderItem={this.props.renderItem}
@@ -196,8 +187,15 @@ class ReactComp extends Component {
       }
       return (<ActivityIndicator style={{marginTop: 80}}/>);
     }
+    const { hideAccessibility } = this.props;
+    const viewAccessibilityProps = {
+      importantForAccessibility: hideAccessibility ? 'no-hide-descendants' : 'yes',
+      accessibilityElementsHidden: hideAccessibility,
+    };
+
     return (
       <FlatList
+        {...viewAccessibilityProps}
         ref={(c) => this.list = c}
         style={this.props.style}
         contentContainerStyle={this.styles.content}
